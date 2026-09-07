@@ -1,0 +1,178 @@
+/* ==========================
+   Auth Page
+========================== */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  background: #f5f7f3;
+}
+
+/* ==========================
+   Left Side
+========================== */
+
+.left-side {
+  flex: 1;
+  background: linear-gradient(135deg, #198754, #2e8b57);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+  text-align: center;
+}
+
+.left-side h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.left-side p {
+  font-size: 18px;
+  margin-top: 15px;
+}
+
+.auth-image {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 30px;
+}
+
+/* ==========================
+   Right Side
+========================== */
+
+.right-side {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 520px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+  animation: fadeUp .5s ease;
+}
+
+/* ==========================
+   Role Cards
+========================== */
+
+.role-grid {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+
+.role-card {
+  flex: 1;
+  border: 2px solid #ddd;
+  border-radius: 15px;
+  padding: 15px;
+  cursor: pointer;
+  text-align: center;
+  transition: .3s;
+  background: white;
+}
+
+.role-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,.1);
+}
+
+.role-card.selected {
+  border: 2px solid #198754;
+  background: #e9f8ef;
+}
+
+.role-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+/* ==========================
+   Inputs
+========================== */
+
+.form-control,
+textarea {
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.input-group .btn {
+  border-radius: 0 10px 10px 0;
+}
+
+/* ==========================
+   Buttons
+========================== */
+
+.btn-success {
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 600;
+}
+
+.btn-outline-success {
+  border-radius: 10px;
+}
+
+/* ==========================
+   Animation
+========================== */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================
+   Mobile
+========================== */
+
+@media (max-width: 992px) {
+
+  .auth-page {
+    flex-direction: column;
+  }
+
+  .left-side {
+    padding: 40px 20px;
+  }
+
+  .left-side h1 {
+    font-size: 2.2rem;
+  }
+
+  .auth-image {
+    max-width: 280px;
+  }
+
+  .right-side {
+    padding: 20px;
+  }
+
+  .auth-card {
+    padding: 25px;
+  }
+
+  .role-grid {
+    flex-direction: column;
+  }
+}

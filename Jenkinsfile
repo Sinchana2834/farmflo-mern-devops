@@ -9,42 +9,82 @@ pipeline {
     stages {
         stage('Build Docker Images') {
             steps {
-                sh 'docker compose build'
+                script {
+                    if (isUnix()) {
+                        sh 'docker compose build'
+                    } else {
+                        bat 'docker compose build'
+                    }
+                }
             }
         }
 
         stage('Start Application') {
             steps {
-                sh 'docker compose up -d'
+                script {
+                    if (isUnix()) {
+                        sh 'docker compose up -d'
+                    } else {
+                        bat 'docker compose up -d'
+                    }
+                }
             }
         }
 
         stage('Smoke Test') {
             steps {
-                sh '''
-                    for attempt in $(seq 1 30); do
-                        if curl --fail --silent http://localhost:8000/api/health > /tmp/farmflo-health.json; then
-                            cat /tmp/farmflo-health.json
-                            break
-                        fi
+                script {
+                    if (isUnix()) {
+                        sh '''
+                            for attempt in $(seq 1 30); do
+                                if curl --fail --silent http://localhost:8000/api/health > /tmp/farmflo-health.json; then
+                                    cat /tmp/farmflo-health.json
+                                    break
+                                fi
 
-                        if [ "$attempt" -eq 30 ]; then
-                            docker compose logs
-                            exit 1
-                        fi
+                                if [ "$attempt" -eq 30 ]; then
+                                    docker compose logs
+                                    exit 1
+                                fi
 
-                        sleep 2
-                    done
+                                sleep 2
+                            done
 
-                    curl --fail --silent http://localhost:5173 > /dev/null
-                '''
+                            curl --fail --silent http://localhost:5173 > /dev/null
+                        '''
+                    } else {
+                        powershell '''
+                            $ErrorActionPreference = "Stop"
+                            for ($attempt = 1; $attempt -le 30; $attempt++) {
+                                try {
+                                    $response = Invoke-WebRequest -UseBasicParsing http://localhost:8000/api/health
+                                    $response.Content
+                                    break
+                                } catch {
+                                    if ($attempt -eq 30) {
+                                        docker compose logs
+                                        exit 1
+                                    }
+                                    Start-Sleep -Seconds 2
+                                }
+                            }
+                            Invoke-WebRequest -UseBasicParsing http://localhost:5173 | Out-Null
+                        '''
+                    }
+                }
             }
         }
     }
 
     post {
         always {
-            sh 'docker compose down -v --remove-orphans || true'
+            script {
+                if (isUnix()) {
+                    sh 'docker compose down -v --remove-orphans || true'
+                } else {
+                    bat 'docker compose down -v --remove-orphans'
+                }
+            }
         }
     }
 }

@@ -57,18 +57,12 @@ pipeline {
                     } else {
                         bat '''
                             @echo off
-                            set "HEALTH_OK="
-                            for /L %%A in (1,1,30) do (
-                                curl.exe --fail --silent http://localhost:18000/api/health > farmflo-health.json && set "HEALTH_OK=1" && goto health_done
-                                timeout /t 2 /nobreak > NUL
-                            )
-                            :health_done
-                            if not defined HEALTH_OK (
+                            docker compose exec -T backend node -e "fetch('http://localhost:8000/api/health').then(async r => { console.log(await r.text()); process.exit(r.ok ? 0 : 1) }).catch(() => process.exit(1))"
+                            if errorlevel 1 (
                                 docker compose logs
                                 exit /b 1
                             )
-                            type farmflo-health.json
-                            curl.exe --fail --silent http://localhost:15173 > NUL
+                            docker compose exec -T frontend node -e "fetch('http://localhost:5173').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
                         '''
                     }
                 }

@@ -55,22 +55,20 @@ pipeline {
                             curl --fail --silent http://localhost:15173 > /dev/null
                         '''
                     } else {
-                        powershell '''
-                            $ErrorActionPreference = "Stop"
-                            for ($attempt = 1; $attempt -le 30; $attempt++) {
-                                try {
-                                    $response = Invoke-WebRequest -UseBasicParsing http://localhost:18000/api/health
-                                    $response.Content
-                                    break
-                                } catch {
-                                    if ($attempt -eq 30) {
-                                        docker compose logs
-                                        exit 1
-                                    }
-                                    Start-Sleep -Seconds 2
-                                }
-                            }
-                            Invoke-WebRequest -UseBasicParsing http://localhost:15173 | Out-Null
+                        bat '''
+                            @echo off
+                            set "HEALTH_OK="
+                            for /L %%A in (1,1,30) do (
+                                curl.exe --fail --silent http://localhost:18000/api/health > farmflo-health.json && set "HEALTH_OK=1" && goto health_done
+                                timeout /t 2 /nobreak > NUL
+                            )
+                            :health_done
+                            if not defined HEALTH_OK (
+                                docker compose logs
+                                exit /b 1
+                            )
+                            type farmflo-health.json
+                            curl.exe --fail --silent http://localhost:15173 > NUL
                         '''
                     }
                 }

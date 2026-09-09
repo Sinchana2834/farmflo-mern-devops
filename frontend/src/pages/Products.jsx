@@ -54,7 +54,7 @@ function Products() {
             <div className="col-md-3 mb-4" key={product._id}>
               <div className="card shadow h-100">
                 <img
-                  src={product.image ? `http://localhost:5000${product.image}` : "https://via.placeholder.com/180x180?text=Farm+Product"}
+                  src={product.image ? `${import.meta.env.VITE_API_URL?.replace(/\/api$/, "") || "http://localhost:8000"}${product.image}` : "https://via.placeholder.com/180x180?text=Farm+Product"}
                   className="card-img-top"
                   alt={product.name}
                   height="180"

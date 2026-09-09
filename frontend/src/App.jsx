@@ -17,12 +17,12 @@ import AdminDashboard from "./pages/AdminDashboard";
 
 // Farmer Pages
 import FarmerDashboard from "./pages/FarmerDashboard";
-import AddProduct from "./pages/farmer/AddProduct";
-import MyProducts from "./pages/farmer/MyProducts";
-import Orders from "./pages/farmer/Orders";
-import Inventory from "./pages/farmer/Inventory";
-import Sales from "./pages/farmer/Sales";
-import FarmerProfile from "./pages/farmer/Profile";
+import AddProduct from "./pages/Farmer/AddProduct";
+import MyProducts from "./pages/Farmer/MyProducts";
+import Orders from "./pages/Farmer/Orders";
+import Inventory from "./pages/Farmer/Inventory";
+import Sales from "./pages/Farmer/Sales";
+import FarmerProfile from "./pages/Farmer/Profile";
 
 // Admin Pages
 import AdminManageFarmers from "./pages/admin/AdminManageFarmers";

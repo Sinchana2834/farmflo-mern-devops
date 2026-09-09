@@ -4,6 +4,8 @@ pipeline {
     environment {
         COMPOSE_PROJECT_NAME = "farmflo-ci-${BUILD_NUMBER}"
         JWT_SECRET = 'jenkins-ci-secret'
+        BACKEND_PORT = '18000'
+        FRONTEND_PORT = '15173'
     }
 
     stages {
@@ -37,7 +39,7 @@ pipeline {
                     if (isUnix()) {
                         sh '''
                             for attempt in $(seq 1 30); do
-                                if curl --fail --silent http://localhost:8000/api/health > /tmp/farmflo-health.json; then
+                                if curl --fail --silent http://localhost:18000/api/health > /tmp/farmflo-health.json; then
                                     cat /tmp/farmflo-health.json
                                     break
                                 fi
@@ -50,14 +52,14 @@ pipeline {
                                 sleep 2
                             done
 
-                            curl --fail --silent http://localhost:5173 > /dev/null
+                            curl --fail --silent http://localhost:15173 > /dev/null
                         '''
                     } else {
                         powershell '''
                             $ErrorActionPreference = "Stop"
                             for ($attempt = 1; $attempt -le 30; $attempt++) {
                                 try {
-                                    $response = Invoke-WebRequest -UseBasicParsing http://localhost:8000/api/health
+                                    $response = Invoke-WebRequest -UseBasicParsing http://localhost:18000/api/health
                                     $response.Content
                                     break
                                 } catch {
@@ -68,7 +70,7 @@ pipeline {
                                     Start-Sleep -Seconds 2
                                 }
                             }
-                            Invoke-WebRequest -UseBasicParsing http://localhost:5173 | Out-Null
+                            Invoke-WebRequest -UseBasicParsing http://localhost:15173 | Out-Null
                         '''
                     }
                 }
